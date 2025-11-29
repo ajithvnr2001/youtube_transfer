@@ -553,8 +553,19 @@
         <div class="copy-box" onclick="copyUrlToClipboard()" id="urlCopyBox" title="Click to copy">Loading URL...</div>
 
         <p style="font-size: 13px; color: #666; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
-          <strong>Alternative:</strong> Use the red "Sign Out" button on the main screen to log out of all accounts, then sign in with the one you want.
+          <strong>Alternative:</strong> Use the red "Global Sign Out" button to log out of all Google services.
         </p>
+
+        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 12px; color: #555;">
+          <strong>Revoke Access</strong><br>
+          You can disconnect this specific app from your Google Account without signing out of Gmail.
+          <br>
+          <button class="btn btn-secondary btn-small" style="margin-top: 8px; width: 100%; background: #e0e0e0; color: #333; border: 1px solid #ccc;" onclick="revokePermissions()">🚫 Revoke App Permissions</button>
+
+          <div style="margin-top: 10px; font-size: 11px; color: #777;">
+            Alternatively, use <a href="https://myaccount.google.com/permissions" target="_blank" style="color: #667eea;">Google Account Permissions</a>.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -754,8 +765,8 @@
           </div>
         </div>
         <div style="display: flex; gap: 5px;">
-          <button class="switch-account-btn" onclick="showSwitchInstructions()">🔄 Switch Account</button>
-          <button class="switch-account-btn" onclick="disconnectAccount()" style="background: rgba(255, 0, 0, 0.2); border-color: rgba(255, 0, 0, 0.3);">🚪 Sign Out</button>
+          <button class="switch-account-btn" onclick="showSwitchInstructions()">🔄 Switch / Disconnect</button>
+          <button class="switch-account-btn" onclick="disconnectAccount()" style="background: rgba(255, 0, 0, 0.2); border-color: rgba(255, 0, 0, 0.3);">🚪 Global Sign Out</button>
         </div>
       `;
     }
@@ -821,6 +832,34 @@
           box.style.background = '#f1f3f4';
         }, 1000);
       });
+    }
+
+    function revokePermissions() {
+      if (!confirm('Are you sure you want to disconnect this app from your Google Account?\n\nYou will need to re-authorize if you want to use it again.')) {
+        return;
+      }
+
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'Revoking...';
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            alert('Permissions revoked successfully. The page will now reload.');
+            window.location.reload();
+          } else {
+            alert('Error: ' + response.error);
+            btn.disabled = false;
+            btn.textContent = '🚫 Revoke App Permissions';
+          }
+        })
+        .withFailureHandler(function(error) {
+          alert('Failed to revoke: ' + error.message);
+          btn.disabled = false;
+          btn.textContent = '🚫 Revoke App Permissions';
+        })
+        .revokeAccess();
     }
 
     function toggleAppendInput() {

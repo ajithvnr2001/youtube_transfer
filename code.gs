@@ -521,3 +521,16 @@ function validateSpreadsheet(spreadsheetId) {
     return { valid: false, error: error.message };
   }
 }
+/**
+ * Revokes the current user's authentication for the script.
+ * This effectively "disconnects" the app from the user's account.
+ */
+function revokeAccess() {
+  try {
+    ScriptApp.invalidateAuth();
+    return { success: true };
+  } catch (error) {
+    Logger.log('Revoke access error: ' + error.message);
+    return { success: false, error: error.message };
+  }
+}
