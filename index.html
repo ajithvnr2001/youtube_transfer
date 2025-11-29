@@ -768,17 +768,40 @@
     }
 
     function showSwitchInstructions() {
-      const appUrl = scriptUrl || window.location.href.split('?')[0];
+      // If scriptUrl is not loaded yet, try to load it or show warning
+      if (!scriptUrl) {
+        document.getElementById('urlCopyBox').textContent = 'Loading URL... please wait.';
+        document.getElementById('accountChooserBtn').removeAttribute('href');
+        document.getElementById('accountChooserBtn').style.opacity = '0.5';
+        document.getElementById('accountChooserBtn').textContent = 'Loading...';
+
+        // Try to load again
+        loadScriptUrl();
+        document.getElementById('switchModal').classList.add('active');
+        return;
+      }
 
       // Update Modal Content
-      document.getElementById('urlCopyBox').textContent = appUrl;
+      document.getElementById('urlCopyBox').textContent = scriptUrl;
 
-      const chooserUrl = 'https://accounts.google.com/AccountChooser?continue=' + encodeURIComponent(appUrl);
-      document.getElementById('accountChooserBtn').href = chooserUrl;
+      // Account Chooser URL
+      const chooserUrl = 'https://accounts.google.com/AccountChooser?continue=' + encodeURIComponent(scriptUrl);
+      const chooserBtn = document.getElementById('accountChooserBtn');
+      chooserBtn.href = chooserUrl;
+      chooserBtn.style.opacity = '1';
+      chooserBtn.textContent = 'Open Account Chooser';
 
       // Show Modal
       document.getElementById('switchModal').classList.add('active');
     }
+
+    // Monitor for scriptUrl changes if modal is open
+    const urlCheckInterval = setInterval(function() {
+      const modal = document.getElementById('switchModal');
+      if (modal.classList.contains('active') && scriptUrl && document.getElementById('accountChooserBtn').style.opacity === '0.5') {
+        showSwitchInstructions();
+      }
+    }, 500);
 
     function closeModal() {
       document.getElementById('switchModal').classList.remove('active');
