@@ -540,19 +540,21 @@
       <button class="modal-close" onclick="closeModal()">×</button>
       <div class="modal-title">🔄 Switch Google Account</div>
 
-      <div class="modal-section" id="option1Section">
-        <p style="font-size: 14px; color: #555;"><strong>Option 1: Account Chooser (Try this first)</strong><br>
-        Attempt to switch accounts using Google's account picker.</p>
-        <a href="#" id="accountChooserBtn" class="modal-btn primary" target="_blank">Open Account Chooser</a>
-        <p style="font-size: 11px; color: #888; margin-top: 5px;">Note: If you get an "Unable to open file" error, try Option 2.</p>
-      </div>
-
       <div class="modal-section">
-        <p style="font-size: 14px; color: #555;"><strong>Option 2: Incognito Window (Recommended)</strong><br>
-        1. Copy the URL below<br>
+        <p style="font-size: 14px; color: #333; margin-bottom: 15px;">
+          To use a different Google account, please use <strong>Incognito Mode</strong>. This prevents "Unable to open file" errors.
+        </p>
+
+        <p style="font-size: 14px; color: #555;"><strong>Instructions:</strong><br>
+        1. Click below to copy the App URL<br>
         2. Open an Incognito/Private window (Ctrl+Shift+N)<br>
-        3. Paste and login</p>
+        3. Paste the URL and sign in with the other account</p>
+
         <div class="copy-box" onclick="copyUrlToClipboard()" id="urlCopyBox" title="Click to copy">Loading URL...</div>
+
+        <p style="font-size: 13px; color: #666; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
+          <strong>Alternative:</strong> Use the red "Sign Out" button on the main screen to log out of all accounts, then sign in with the one you want.
+        </p>
       </div>
     </div>
   </div>
@@ -770,16 +772,10 @@
     function showSwitchInstructions() {
       const modal = document.getElementById('switchModal');
       const urlBox = document.getElementById('urlCopyBox');
-      const chooserBtn = document.getElementById('accountChooserBtn');
-      const option1Section = document.getElementById('option1Section');
 
       // Loading State
       if (!scriptUrl) {
         urlBox.textContent = 'Loading URL...';
-        chooserBtn.removeAttribute('href');
-        chooserBtn.style.opacity = '0.5';
-        chooserBtn.textContent = 'Loading...';
-
         loadScriptUrl(); // Retry
         modal.classList.add('active');
         return;
@@ -787,25 +783,15 @@
 
       // Validation
       if (!scriptUrl.startsWith('https://script.google.com')) {
-        // Invalid URL (likely local dev or not deployed properly)
-        // Hide Account Chooser option to prevent "Bad Request" errors
-        if (option1Section) option1Section.style.display = 'none';
-
         urlBox.textContent = 'Error: App not properly deployed. Cannot generate link.';
         urlBox.style.color = 'red';
         modal.classList.add('active');
         return;
       }
 
-      // Valid URL - Show All Options
-      if (option1Section) option1Section.style.display = 'block';
+      // Valid URL
       urlBox.textContent = scriptUrl;
       urlBox.style.color = ''; // Reset color
-
-      const chooserUrl = 'https://accounts.google.com/AccountChooser?continue=' + encodeURIComponent(scriptUrl);
-      chooserBtn.href = chooserUrl;
-      chooserBtn.style.opacity = '1';
-      chooserBtn.textContent = 'Open Account Chooser';
 
       modal.classList.add('active');
     }
@@ -813,7 +799,8 @@
     // Monitor for scriptUrl changes if modal is open
     const urlCheckInterval = setInterval(function() {
       const modal = document.getElementById('switchModal');
-      if (modal.classList.contains('active') && scriptUrl && document.getElementById('accountChooserBtn').style.opacity === '0.5') {
+      const urlBox = document.getElementById('urlCopyBox');
+      if (modal.classList.contains('active') && scriptUrl && urlBox.textContent === 'Loading URL...') {
         showSwitchInstructions();
       }
     }, 500);
