@@ -641,19 +641,19 @@
       const appUrl = scriptUrl || window.location.href.split('?')[0];
       const instructions = `To use a different Google account:
 
+IMPORTANT: Do NOT just open the link in a new tab. You may get an "Unable to open file" error.
+
 1. Copy this app URL (automatically copied):
    ${appUrl}
 
-2. Open an Incognito/Private window:
+2. Open an Incognito/Private window (RECOMMENDED):
    • Chrome/Edge: Ctrl+Shift+N (Cmd+Shift+N on Mac)
    • Firefox: Ctrl+Shift+P (Cmd+Shift+P on Mac)
    • Safari: Cmd+Shift+N
 
-3. Paste the URL in the new window
+3. Paste the URL in the new window & Sign in
 
-4. Sign in with your desired account
-
-Each window can use a different Google account!`;
+Alternatively, use the 'Disconnect' button to sign out of all accounts first.`;
 
       alert(instructions);
       
