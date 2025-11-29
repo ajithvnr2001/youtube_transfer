@@ -6,9 +6,21 @@
 
 // Serves the HTML interface
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('Index')
-    .setTitle('YouTube Subscription Transfer')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  return HtmlService.createHtmlOutputFromFile('index')
+    .setTitle('YouTube Subscription Transfer');
+}
+
+/**
+ * Gets the valid Script URL (script.google.com)
+ * @return {string} The deployed web app URL
+ */
+function getScriptUrl() {
+  try {
+    return ScriptApp.getService().getUrl();
+  } catch (error) {
+    Logger.log('Error getting script URL: ' + error.message);
+    return '';
+  }
 }
 
 /**
@@ -506,5 +518,18 @@ function validateSpreadsheet(spreadsheetId) {
   } catch (error) {
     Logger.log('Validate spreadsheet error: ' + error.message);
     return { valid: false, error: error.message };
+  }
+}
+/**
+ * Revokes the current user's authentication for the script.
+ * This effectively "disconnects" the app from the user's account.
+ */
+function revokeAccess() {
+  try {
+    ScriptApp.invalidateAuth();
+    return { success: true };
+  } catch (error) {
+    Logger.log('Revoke access error: ' + error.message);
+    return { success: false, error: error.message };
   }
 }
