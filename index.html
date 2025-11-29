@@ -557,11 +557,21 @@
     let isProcessing = false;
     let currentSheetData = null;
     let currentUser = null;
+    let scriptUrl = '';
 
     // Load current user info on page load
     window.addEventListener('DOMContentLoaded', function() {
       loadCurrentUser();
+      loadScriptUrl();
     });
+
+    function loadScriptUrl() {
+      google.script.run
+        .withSuccessHandler(function(url) {
+          scriptUrl = url;
+        })
+        .getScriptUrl();
+    }
 
     function loadCurrentUser() {
       google.script.run
@@ -613,12 +623,22 @@
             ${channelInfo}
           </div>
         </div>
-        <button class="switch-account-btn" onclick="showSwitchInstructions()">🔄 Switch Account</button>
+        <div style="display: flex; gap: 5px;">
+          <button class="switch-account-btn" onclick="showSwitchInstructions()">🔄 Switch Account</button>
+          <button class="switch-account-btn" onclick="disconnectAccount()" style="background: rgba(255, 0, 0, 0.2); border-color: rgba(255, 0, 0, 0.3);">❌ Disconnect</button>
+        </div>
       `;
     }
 
+    function disconnectAccount() {
+      if (confirm('This will sign you out of your Google Account. Are you sure?')) {
+        window.open('https://accounts.google.com/Logout', '_blank');
+        alert('You have been signed out in a new tab. Please reload this page or close it.');
+      }
+    }
+
     function showSwitchInstructions() {
-      const appUrl = window.location.href.split('?')[0];
+      const appUrl = scriptUrl || window.location.href.split('?')[0];
       const instructions = `To use a different Google account:
 
 1. Copy this app URL (automatically copied):

@@ -12,6 +12,14 @@ function doGet() {
 }
 
 /**
+ * Gets the valid Script URL (script.google.com)
+ * @return {string} The deployed web app URL
+ */
+function getScriptUrl() {
+  return ScriptApp.getService().getUrl();
+}
+
+/**
  * Gets current user information
  * @return {object} User information
  */
