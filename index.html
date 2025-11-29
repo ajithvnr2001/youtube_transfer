@@ -540,7 +540,7 @@
       <button class="modal-close" onclick="closeModal()">×</button>
       <div class="modal-title">🔄 Switch Google Account</div>
 
-      <div class="modal-section">
+      <div class="modal-section" id="option1Section">
         <p style="font-size: 14px; color: #555;"><strong>Option 1: Account Chooser (Try this first)</strong><br>
         Attempt to switch accounts using Google's account picker.</p>
         <a href="#" id="accountChooserBtn" class="modal-btn primary" target="_blank">Open Account Chooser</a>
@@ -768,31 +768,46 @@
     }
 
     function showSwitchInstructions() {
-      // If scriptUrl is not loaded yet, try to load it or show warning
-      if (!scriptUrl) {
-        document.getElementById('urlCopyBox').textContent = 'Loading URL... please wait.';
-        document.getElementById('accountChooserBtn').removeAttribute('href');
-        document.getElementById('accountChooserBtn').style.opacity = '0.5';
-        document.getElementById('accountChooserBtn').textContent = 'Loading...';
+      const modal = document.getElementById('switchModal');
+      const urlBox = document.getElementById('urlCopyBox');
+      const chooserBtn = document.getElementById('accountChooserBtn');
+      const option1Section = document.getElementById('option1Section');
 
-        // Try to load again
-        loadScriptUrl();
-        document.getElementById('switchModal').classList.add('active');
+      // Loading State
+      if (!scriptUrl) {
+        urlBox.textContent = 'Loading URL...';
+        chooserBtn.removeAttribute('href');
+        chooserBtn.style.opacity = '0.5';
+        chooserBtn.textContent = 'Loading...';
+
+        loadScriptUrl(); // Retry
+        modal.classList.add('active');
         return;
       }
 
-      // Update Modal Content
-      document.getElementById('urlCopyBox').textContent = scriptUrl;
+      // Validation
+      if (!scriptUrl.startsWith('https://script.google.com')) {
+        // Invalid URL (likely local dev or not deployed properly)
+        // Hide Account Chooser option to prevent "Bad Request" errors
+        if (option1Section) option1Section.style.display = 'none';
 
-      // Account Chooser URL
+        urlBox.textContent = 'Error: App not properly deployed. Cannot generate link.';
+        urlBox.style.color = 'red';
+        modal.classList.add('active');
+        return;
+      }
+
+      // Valid URL - Show All Options
+      if (option1Section) option1Section.style.display = 'block';
+      urlBox.textContent = scriptUrl;
+      urlBox.style.color = ''; // Reset color
+
       const chooserUrl = 'https://accounts.google.com/AccountChooser?continue=' + encodeURIComponent(scriptUrl);
-      const chooserBtn = document.getElementById('accountChooserBtn');
       chooserBtn.href = chooserUrl;
       chooserBtn.style.opacity = '1';
       chooserBtn.textContent = 'Open Account Chooser';
 
-      // Show Modal
-      document.getElementById('switchModal').classList.add('active');
+      modal.classList.add('active');
     }
 
     // Monitor for scriptUrl changes if modal is open

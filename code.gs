@@ -16,7 +16,12 @@ function doGet() {
  * @return {string} The deployed web app URL
  */
 function getScriptUrl() {
-  return ScriptApp.getService().getUrl();
+  try {
+    return ScriptApp.getService().getUrl();
+  } catch (error) {
+    Logger.log('Error getting script URL: ' + error.message);
+    return '';
+  }
 }
 
 /**
