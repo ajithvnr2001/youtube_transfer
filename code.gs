@@ -7,8 +7,7 @@
 // Serves the HTML interface
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index')
-    .setTitle('YouTube Subscription Transfer')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    .setTitle('YouTube Subscription Transfer');
 }
 
 /**

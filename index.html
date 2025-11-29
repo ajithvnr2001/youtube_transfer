@@ -560,7 +560,7 @@
           <strong>Revoke Access</strong><br>
           You can disconnect this specific app from your Google Account without signing out of Gmail.
           <br>
-          <button class="btn btn-secondary btn-small" style="margin-top: 8px; width: 100%; background: #e0e0e0; color: #333; border: 1px solid #ccc;" onclick="revokePermissions()">🚫 Revoke App Permissions</button>
+          <button class="btn btn-secondary btn-small" style="margin-top: 8px; width: 100%; background: #e0e0e0; color: #333; border: 1px solid #ccc;" onclick="revokePermissions()">Revoke App Permissions</button>
 
           <div style="margin-top: 10px; font-size: 11px; color: #777;">
             Alternatively, use <a href="https://myaccount.google.com/permissions" target="_blank" style="color: #667eea;">Google Account Permissions</a>.
@@ -702,8 +702,11 @@
 
     // Load current user info on page load
     window.addEventListener('DOMContentLoaded', function() {
-      loadCurrentUser();
-      loadScriptUrl();
+      // Delay initial load slightly to avoid race conditions with iframe loading
+      setTimeout(function() {
+        loadCurrentUser();
+        loadScriptUrl();
+      }, 500);
     });
 
     function loadScriptUrl() {
@@ -835,7 +838,7 @@
     }
 
     function revokePermissions() {
-      if (!confirm('Are you sure you want to disconnect this app from your Google Account?\n\nYou will need to re-authorize if you want to use it again.')) {
+      if (!confirm('Are you sure you want to disconnect this app from your Google Account? You will need to re-authorize if you want to use it again.')) {
         return;
       }
 
