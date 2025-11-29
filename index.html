@@ -6,543 +6,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Subscription Transfer</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      max-width: 700px;
-      width: 100%;
-      padding: 40px;
-    }
-
-    .account-info {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .account-details {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-    }
-
-    .account-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #667eea;
-      font-size: 18px;
-    }
-
-    .account-avatar img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-
-    .account-text {
-      flex: 1;
-    }
-
-    .account-email {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .account-channel {
-      font-size: 12px;
-      opacity: 0.9;
-    }
-
-    .switch-account-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .switch-account-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    h1 {
-      color: #FF0000;
-      font-size: 28px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .subtitle {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .section {
-      margin-bottom: 25px;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .mode-selector {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .mode-btn {
-      flex: 1;
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      background: white;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s;
-      font-size: 14px;
-    }
-
-    .mode-btn.active {
-      background: #667eea;
-      color: white;
-      border-color: #667eea;
-    }
-
-    .mode-content {
-      display: none;
-    }
-
-    .mode-content.active {
-      display: block;
-    }
-
-    .input-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    input[type="text"], textarea {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: border-color 0.3s;
-      font-family: 'Courier New', monospace;
-    }
-
-    input[type="text"]:focus, textarea:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-
-    .btn {
-      background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
-      color: white;
-      padding: 14px 32px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: transform 0.2s, box-shadow 0.2s;
-      margin-top: 10px;
-    }
-
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
-    }
-
-    .btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .btn-secondary:hover:not(:disabled) {
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-small {
-      padding: 8px 16px;
-      font-size: 13px;
-      width: auto;
-      margin: 0;
-    }
-
-    .export-success {
-      background: #d4edda;
-      border: 2px solid #28a745;
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 15px;
-    }
-
-    .export-success h3 {
-      color: #155724;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .share-message-box {
-      background: #f8f9fa;
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 15px;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      white-space: pre-wrap;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-
-    .log-container {
-      margin-top: 25px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 20px;
-      max-height: 300px;
-      overflow-y: auto;
-      display: none;
-    }
-
-    .log-container.active {
-      display: block;
-    }
-
-    .log-title {
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 12px;
-      font-size: 14px;
-    }
-
-    .log-entry {
-      padding: 8px 12px;
-      margin-bottom: 6px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: 'Courier New', monospace;
-    }
-
-    .log-success {
-      background: #d4edda;
-      color: #155724;
-      border-left: 4px solid #28a745;
-    }
-
-    .log-error {
-      background: #f8d7da;
-      color: #721c24;
-      border-left: 4px solid #dc3545;
-    }
-
-    .log-warning {
-      background: #fff3cd;
-      color: #856404;
-      border-left: 4px solid #ffc107;
-    }
-
-    .log-info {
-      background: #d1ecf1;
-      color: #0c5460;
-      border-left: 4px solid #17a2b8;
-    }
-
-    .stats {
-      display: flex;
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .stat-box {
-      flex: 1;
-      background: #f0f0f0;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 24px;
-      font-weight: 700;
-      color: #667eea;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #666;
-      margin-top: 4px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #e0e0e0;
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 15px 0;
-      display: none;
-    }
-
-    .progress-bar.active {
-      display: block;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #667eea, #764ba2);
-      width: 0%;
-      transition: width 0.3s;
-    }
-
-    .help-text {
-      font-size: 12px;
-      color: #888;
-      margin-top: 6px;
-    }
-
-    .radio-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .radio-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .radio-option:hover {
-      border-color: #667eea;
-      background: #f8f9fa;
-    }
-
-    .radio-option input[type="radio"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    .radio-option label {
-      margin: 0;
-      cursor: pointer;
-      flex: 1;
-    }
-
-    .loading-account {
-      text-align: center;
-      color: #666;
-      padding: 10px;
-    }
-
-    /* Modal Styles */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-box {
-      background: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-      padding: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      position: relative;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: #666;
-    }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: #333;
-    }
-
-    .modal-section {
-      margin-bottom: 20px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 15px;
-    }
-
-    .modal-section:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-      margin-bottom: 0;
-    }
-
-    .modal-btn {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      text-align: center;
-      background: #f8f9fa;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      color: #333;
-      text-decoration: none;
-      margin-top: 10px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .modal-btn:hover {
-      background: #e9ecef;
-      border-color: #ced4da;
-    }
-
-    .modal-btn.primary {
-      background: #667eea;
-      color: white;
-      border: none;
-    }
-
-    .modal-btn.primary:hover {
-      background: #5a6fd6;
-    }
-
-    .copy-box {
-      background: #f1f3f4;
-      padding: 10px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 12px;
-      word-break: break-all;
-      margin: 10px 0;
-      cursor: pointer;
-      border: 1px solid #e0e0e0;
-    }
-
-    .copy-box:hover {
-      background: #e8eaed;
-      border-color: #d1d3d4;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .spinner {
-      display: inline-block;
-      animation: spin 1s linear infinite;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; display: flex; justify-content: center; align-items: center; }
+    .container { background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 700px; width: 100%; padding: 40px; }
+    .account-info { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; }
+    .account-details { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .account-avatar { width: 40px; height: 40px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #667eea; font-size: 18px; }
+    .account-avatar img { width: 40px; height: 40px; border-radius: 50%; }
+    .account-text { flex: 1; }
+    .account-email { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .account-channel { font-size: 12px; opacity: 0.9; }
+    .switch-account-btn { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.3s; }
+    .switch-account-btn:hover { background: rgba(255, 255, 255, 0.3); }
+    .header { text-align: center; margin-bottom: 30px; }
+    h1 { color: #FF0000; font-size: 28px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .subtitle { color: #666; font-size: 14px; }
+    .section { margin-bottom: 25px; }
+    .section-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .mode-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+    .mode-btn { flex: 1; padding: 12px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s; font-size: 14px; }
+    .mode-btn.active { background: #667eea; color: white; border-color: #667eea; }
+    .mode-content { display: none; }
+    .mode-content.active { display: block; }
+    .input-group { margin-bottom: 15px; }
+    label { display: block; font-size: 14px; color: #555; margin-bottom: 6px; font-weight: 500; }
+    input[type="text"], textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s; font-family: monospace; }
+    input[type="text"]:focus, textarea:focus { outline: none; border-color: #667eea; }
+    textarea { resize: vertical; min-height: 120px; }
+    .btn { background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%); color: white; padding: 14px 32px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: transform 0.2s, box-shadow 0.2s; margin-top: 10px; }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3); }
+    .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+    .btn-secondary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .btn-secondary:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3); }
+    .btn-small { padding: 8px 16px; font-size: 13px; width: auto; margin: 0; }
+    .export-success { background: #d4edda; border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin-top: 15px; }
+    .export-success h3 { color: #155724; font-size: 16px; margin-bottom: 10px; }
+    .action-buttons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .share-message-box { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin-top: 15px; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 150px; overflow-y: auto; }
+    .log-container { margin-top: 25px; background: #f8f9fa; border-radius: 8px; padding: 20px; max-height: 300px; overflow-y: auto; display: none; }
+    .log-container.active { display: block; }
+    .log-title { font-weight: 600; color: #333; margin-bottom: 12px; font-size: 14px; }
+    .log-entry { padding: 8px 12px; margin-bottom: 6px; border-radius: 6px; font-size: 13px; font-family: monospace; }
+    .log-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+    .log-error { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+    .log-warning { background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }
+    .log-info { background: #d1ecf1; color: #0c5460; border-left: 4px solid #17a2b8; }
+    .stats { display: flex; gap: 15px; margin-top: 15px; }
+    .stat-box { flex: 1; background: #f0f0f0; padding: 15px; border-radius: 8px; text-align: center; }
+    .stat-number { font-size: 24px; font-weight: 700; color: #667eea; }
+    .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+    .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin: 15px 0; display: none; }
+    .progress-bar.active { display: block; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); width: 0%; transition: width 0.3s; }
+    .help-text { font-size: 12px; color: #888; margin-top: 6px; }
+    .radio-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .radio-option { display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+    .radio-option:hover { border-color: #667eea; background: #f8f9fa; }
+    .radio-option input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
+    .radio-option label { margin: 0; cursor: pointer; flex: 1; }
+    .loading-account { text-align: center; color: #666; padding: 10px; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: white; border-radius: 12px; width: 90%; max-width: 500px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; }
+    .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 20px; cursor: pointer; color: #666; }
+    .modal-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #333; }
+    .modal-section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    .modal-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+    .modal-btn { display: block; width: 100%; padding: 10px; text-align: center; background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px; color: #333; text-decoration: none; margin-top: 10px; font-weight: 500; transition: all 0.2s; }
+    .modal-btn:hover { background: #e9ecef; border-color: #ced4da; }
+    .modal-btn.primary { background: #667eea; color: white; border: none; }
+    .modal-btn.primary:hover { background: #5a6fd6; }
+    .copy-box { background: #f1f3f4; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 12px; word-break: break-all; margin: 10px 0; cursor: pointer; border: 1px solid #e0e0e0; }
+    .copy-box:hover { background: #e8eaed; border-color: #d1d3d4; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; animation: spin 1s linear infinite; }
   </style>
 </head>
 <body>
-  <!-- Custom Modal -->
   <div class="modal-overlay" id="switchModal">
     <div class="modal-box">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      <div class="modal-title">🔄 Switch Google Account</div>
+      <button class="modal-close" onclick="closeModal()">X</button>
+      <div class="modal-title">Switch Google Account</div>
 
       <div class="modal-section">
         <p style="font-size: 14px; color: #333; margin-bottom: 15px;">
-          To use a different Google account, please use <strong>Incognito Mode</strong>. This prevents "Unable to open file" errors.
+          To use a different Google account, please use <strong>Incognito Mode</strong>. This prevents errors.
         </p>
 
         <p style="font-size: 14px; color: #555;"><strong>Instructions:</strong><br>
@@ -571,37 +119,32 @@
   </div>
 
   <div class="container">
-    <!-- Account Info Bar -->
     <div class="account-info" id="accountInfo">
       <div class="loading-account">Loading account info...</div>
     </div>
 
     <div class="header">
-      <h1>
-        📺 YouTube Subscription Transfer
-      </h1>
+      <h1>YouTube Subscription Transfer</h1>
       <p class="subtitle">Transfer your YouTube subscriptions across accounts</p>
     </div>
 
-    <!-- Mode Selection -->
     <div class="section">
-      <div class="section-title">🎯 Choose Your Action</div>
+      <div class="section-title">Choose Your Action</div>
       <div class="mode-selector">
-        <button class="mode-btn active" onclick="switchMainMode('export')">📤 Export & Share</button>
-        <button class="mode-btn" onclick="switchMainMode('import')">📥 Import from Others</button>
+        <button class="mode-btn active" onclick="switchMainMode('export')">Export and Share</button>
+        <button class="mode-btn" onclick="switchMainMode('import')">Import from Others</button>
       </div>
     </div>
 
-    <!-- EXPORT MODE -->
     <div id="export-mode" class="mode-content active">
       <div class="section">
-        <div class="section-title">📤 Export Your Subscriptions</div>
+        <div class="section-title">Export Your Subscriptions</div>
         <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
           Export your YouTube subscriptions to a Google Sheet and share it with others.
         </p>
         
         <div class="radio-group">
-          <div class="radio-option" onclick="document.getElementById('exportNew').checked = true; toggleAppendInput()">
+          <div class="radio-option" onclick="selectExportNew()">
             <input type="radio" name="exportType" id="exportNew" value="new" checked onchange="toggleAppendInput()">
             <label for="exportNew">
               <strong>Create New Sheet</strong>
@@ -609,10 +152,10 @@
             </label>
           </div>
           
-          <div class="radio-option" onclick="document.getElementById('exportAppend').checked = true; toggleAppendInput()">
+          <div class="radio-option" onclick="selectExportAppend()">
             <input type="radio" name="exportType" id="exportAppend" value="append" onchange="toggleAppendInput()">
             <label for="exportAppend">
-              <strong>Copy & Add to Existing</strong>
+              <strong>Copy and Add to Existing</strong>
               <div style="font-size: 12px; color: #666;">Add your subs to someone else's shared sheet</div>
             </label>
           </div>
@@ -625,33 +168,30 @@
         </div>
 
         <button class="btn btn-secondary" onclick="exportSubscriptions()" id="exportBtn">
-          📊 Export Subscriptions
+          Export Subscriptions
         </button>
       </div>
 
       <div id="exportResult" style="display: none;"></div>
     </div>
 
-    <!-- IMPORT MODE -->
     <div id="import-mode" class="mode-content">
       <div class="section">
-        <div class="section-title">📥 Select Input Method</div>
+        <div class="section-title">Select Input Method</div>
         <div class="mode-selector">
           <button class="mode-btn active" onclick="switchImportMode('sheet')">From Google Sheet</button>
           <button class="mode-btn" onclick="switchImportMode('paste')">Manual Paste</button>
         </div>
 
-        <!-- Sheet Mode -->
         <div id="sheet-mode" class="mode-content active" style="margin-top: 15px;">
           <div class="input-group">
             <label>Google Sheet ID</label>
             <input type="text" id="sheetId" placeholder="1AbC123XyZ...">
             <p class="help-text">Found in the URL: docs.google.com/spreadsheets/d/<strong>SHEET_ID</strong>/edit</p>
           </div>
-          <button class="btn btn-secondary" onclick="loadFromSheet()" id="loadBtn">📥 Load Channel IDs</button>
+          <button class="btn btn-secondary" onclick="loadFromSheet()" id="loadBtn">Load Channel IDs</button>
         </div>
 
-        <!-- Manual Paste Mode -->
         <div id="paste-mode" class="mode-content" style="margin-top: 15px;">
           <div class="input-group">
             <label>Channel IDs (one per line or comma-separated)</label>
@@ -662,7 +202,7 @@
       </div>
 
       <button class="btn" onclick="startTransfer()" id="startBtn">
-        🚀 Start Transfer
+        Start Transfer
       </button>
 
       <div class="progress-bar" id="progressBar">
@@ -685,29 +225,35 @@
       </div>
 
       <div class="log-container" id="logContainer">
-        <div class="log-title">📋 Transfer Log</div>
+        <div class="log-title">Transfer Log</div>
         <div id="logContent"></div>
       </div>
     </div>
   </div>
 
-  <script>
-    let mainMode = 'export';
-    let importMode = 'sheet';
-    let channelList = [];
-    let isProcessing = false;
-    let currentSheetData = null;
-    let currentUser = null;
-    let scriptUrl = '';
+<script>
+    var mainMode = 'export';
+    var importMode = 'sheet';
+    var channelList = [];
+    var isProcessing = false;
+    var currentSheetData = null;
+    var currentUser = null;
+    var scriptUrl = '';
 
-    // Load current user info on page load
-    window.addEventListener('DOMContentLoaded', function() {
-      // Delay initial load slightly to avoid race conditions with iframe loading
-      setTimeout(function() {
-        loadCurrentUser();
-        loadScriptUrl();
-      }, 500);
-    });
+    function selectExportNew() {
+      document.getElementById('exportNew').checked = true;
+      toggleAppendInput();
+    }
+
+    function selectExportAppend() {
+      document.getElementById('exportAppend').checked = true;
+      toggleAppendInput();
+    }
+
+    function toggleAppendInput() {
+      var isAppend = document.getElementById('exportAppend').checked;
+      document.getElementById('appendSheetInput').style.display = isAppend ? 'block' : 'none';
+    }
 
     function loadScriptUrl() {
       google.script.run
@@ -725,57 +271,54 @@
         })
         .withFailureHandler(function(error) {
           console.error('Failed to load user:', error);
-          document.getElementById('accountInfo').innerHTML = `
-            <div class="account-details">
-              <div class="account-text">
-                <div class="account-email">Error loading account</div>
-              </div>
-            </div>
-            <button class="switch-account-btn" onclick="showSwitchInstructions()">🔄 Switch Account</button>
-          `;
+          document.getElementById('accountInfo').innerHTML =
+            '<div class="account-details">' +
+              '<div class="account-text">' +
+                '<div class="account-email">Error loading account</div>' +
+              '</div>' +
+            '</div>' +
+            '<button class="switch-account-btn" onclick="showSwitchInstructions()">Switch Account</button>';
         })
         .getCurrentUser();
     }
 
     function displayAccountInfo(user) {
       if (!user.success) {
-        document.getElementById('accountInfo').innerHTML = `
-          <div class="account-details">
-            <div class="account-text">
-              <div class="account-email">Not authenticated</div>
-            </div>
-          </div>
-          <button class="switch-account-btn" onclick="showSwitchInstructions()">🔄 Switch Account</button>
-        `;
+        document.getElementById('accountInfo').innerHTML =
+          '<div class="account-details">' +
+            '<div class="account-text">' +
+              '<div class="account-email">Not authenticated</div>' +
+            '</div>' +
+          '</div>' +
+          '<button class="switch-account-btn" onclick="showSwitchInstructions()">Switch Account</button>';
         return;
       }
 
-      const initial = user.email ? user.email.charAt(0).toUpperCase() : '?';
-      const avatarHtml = user.thumbnailUrl 
-        ? `<img src="${user.thumbnailUrl}" alt="Avatar">`
+      var initial = user.email ? user.email.charAt(0).toUpperCase() : '?';
+      var avatarHtml = user.thumbnailUrl
+        ? '<img src="' + user.thumbnailUrl + '" alt="Avatar">'
         : initial;
 
-      const channelInfo = user.channelName 
-        ? `<div class="account-channel">📺 ${user.channelName}</div>`
+      var channelInfo = user.channelName
+        ? '<div class="account-channel">Channel: ' + user.channelName + '</div>'
         : '';
 
-      document.getElementById('accountInfo').innerHTML = `
-        <div class="account-details">
-          <div class="account-avatar">${avatarHtml}</div>
-          <div class="account-text">
-            <div class="account-email">${user.email}</div>
-            ${channelInfo}
-          </div>
-        </div>
-        <div style="display: flex; gap: 5px;">
-          <button class="switch-account-btn" onclick="showSwitchInstructions()">🔄 Switch / Disconnect</button>
-          <button class="switch-account-btn" onclick="disconnectAccount()" style="background: rgba(255, 0, 0, 0.2); border-color: rgba(255, 0, 0, 0.3);">🚪 Global Sign Out</button>
-        </div>
-      `;
+      document.getElementById('accountInfo').innerHTML =
+        '<div class="account-details">' +
+          '<div class="account-avatar">' + avatarHtml + '</div>' +
+          '<div class="account-text">' +
+            '<div class="account-email">' + user.email + '</div>' +
+            channelInfo +
+          '</div>' +
+        '</div>' +
+        '<div style="display: flex; gap: 5px;">' +
+          '<button class="switch-account-btn" onclick="showSwitchInstructions()">Switch / Disconnect</button>' +
+          '<button class="switch-account-btn" onclick="disconnectAccount()" style="background: rgba(255, 0, 0, 0.2); border-color: rgba(255, 0, 0, 0.3);">Global Sign Out</button>' +
+        '</div>';
     }
 
     function disconnectAccount() {
-      const warning = '⚠️ WARNING: This will sign you out of your Google Account in ALL tabs (Gmail, Drive, etc).\n\nTo switch accounts just for this app, use the "Switch Account" button instead.\n\nAre you sure you want to completely sign out?';
+      var warning = 'WARNING: This will sign you out of your Google Account in ALL tabs (Gmail, Drive, etc).\n\nTo switch accounts just for this app, use the "Switch Account" button instead.\n\nAre you sure you want to completely sign out?';
 
       if (confirm(warning)) {
         window.open('https://accounts.google.com/Logout', '_blank');
@@ -784,18 +327,16 @@
     }
 
     function showSwitchInstructions() {
-      const modal = document.getElementById('switchModal');
-      const urlBox = document.getElementById('urlCopyBox');
+      var modal = document.getElementById('switchModal');
+      var urlBox = document.getElementById('urlCopyBox');
 
-      // Loading State
       if (!scriptUrl) {
         urlBox.textContent = 'Loading URL...';
-        loadScriptUrl(); // Retry
+        loadScriptUrl();
         modal.classList.add('active');
         return;
       }
 
-      // Validation
       if (!scriptUrl.startsWith('https://script.google.com')) {
         urlBox.textContent = 'Error: App not properly deployed. Cannot generate link.';
         urlBox.style.color = 'red';
@@ -803,17 +344,15 @@
         return;
       }
 
-      // Valid URL
       urlBox.textContent = scriptUrl;
-      urlBox.style.color = ''; // Reset color
+      urlBox.style.color = '';
 
       modal.classList.add('active');
     }
 
-    // Monitor for scriptUrl changes if modal is open
-    const urlCheckInterval = setInterval(function() {
-      const modal = document.getElementById('switchModal');
-      const urlBox = document.getElementById('urlCopyBox');
+    setInterval(function() {
+      var modal = document.getElementById('switchModal');
+      var urlBox = document.getElementById('urlCopyBox');
       if (modal.classList.contains('active') && scriptUrl && urlBox.textContent === 'Loading URL...') {
         showSwitchInstructions();
       }
@@ -824,13 +363,13 @@
     }
 
     function copyUrlToClipboard() {
-      const urlText = document.getElementById('urlCopyBox').textContent;
+      var urlText = document.getElementById('urlCopyBox').textContent;
       navigator.clipboard.writeText(urlText).then(function() {
-        const box = document.getElementById('urlCopyBox');
-        const original = box.textContent;
-        box.textContent = '✅ Copied!';
+        var box = document.getElementById('urlCopyBox');
+        var original = box.textContent;
+        box.textContent = 'Copied!';
         box.style.background = '#d4edda';
-        setTimeout(() => {
+        setTimeout(function() {
           box.textContent = original;
           box.style.background = '#f1f3f4';
         }, 1000);
@@ -842,7 +381,7 @@
         return;
       }
 
-      const btn = event.target;
+      var btn = event.target;
       btn.disabled = true;
       btn.textContent = 'Revoking...';
 
@@ -854,52 +393,51 @@
           } else {
             alert('Error: ' + response.error);
             btn.disabled = false;
-            btn.textContent = '🚫 Revoke App Permissions';
+            btn.textContent = 'Revoke App Permissions';
           }
         })
         .withFailureHandler(function(error) {
           alert('Failed to revoke: ' + error.message);
           btn.disabled = false;
-          btn.textContent = '🚫 Revoke App Permissions';
+          btn.textContent = 'Revoke App Permissions';
         })
         .revokeAccess();
-    }
-
-    function toggleAppendInput() {
-      const isAppend = document.getElementById('exportAppend').checked;
-      document.getElementById('appendSheetInput').style.display = isAppend ? 'block' : 'none';
     }
 
     function switchMainMode(mode) {
       mainMode = mode;
       
-      const buttons = document.querySelectorAll('.section > .mode-selector .mode-btn');
-      buttons.forEach(btn => btn.classList.remove('active'));
+      var buttons = document.querySelectorAll('.section > .mode-selector .mode-btn');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+      }
       event.target.classList.add('active');
       
       document.getElementById('export-mode').classList.remove('active');
       document.getElementById('import-mode').classList.remove('active');
-      document.getElementById(`${mode}-mode`).classList.add('active');
+      document.getElementById(mode + '-mode').classList.add('active');
     }
 
     function switchImportMode(mode) {
       importMode = mode;
       
-      const buttons = document.querySelectorAll('#import-mode .mode-selector .mode-btn');
-      buttons.forEach(btn => btn.classList.remove('active'));
+      var buttons = document.querySelectorAll('#import-mode .mode-selector .mode-btn');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+      }
       event.target.classList.add('active');
       
       document.getElementById('paste-mode').classList.remove('active');
       document.getElementById('sheet-mode').classList.remove('active');
-      document.getElementById(`${mode}-mode`).classList.add('active');
+      document.getElementById(mode + '-mode').classList.add('active');
     }
 
     function exportSubscriptions() {
-      const exportType = document.querySelector('input[name="exportType"]:checked').value;
-      const exportBtn = document.getElementById('exportBtn');
+      var exportType = document.querySelector('input[name="exportType"]:checked').value;
+      var exportBtn = document.getElementById('exportBtn');
       
       exportBtn.disabled = true;
-      exportBtn.innerHTML = '<span class="spinner">⏳</span> Exporting...';
+      exportBtn.innerHTML = '<span class="spinner"></span> Exporting...';
 
       if (exportType === 'new') {
         google.script.run
@@ -907,11 +445,11 @@
           .withFailureHandler(handleExportFailure)
           .exportSubscriptionsToSheet();
       } else {
-        const sourceSheetId = document.getElementById('sourceSheetId').value.trim();
+        var sourceSheetId = document.getElementById('sourceSheetId').value.trim();
         if (!sourceSheetId) {
           alert('Please enter a Source Sheet ID');
           exportBtn.disabled = false;
-          exportBtn.innerHTML = '📊 Export Subscriptions';
+          exportBtn.innerHTML = 'Export Subscriptions';
           return;
         }
         
@@ -923,62 +461,60 @@
     }
 
     function handleExportSuccess(response) {
-      const exportBtn = document.getElementById('exportBtn');
+      var exportBtn = document.getElementById('exportBtn');
       exportBtn.disabled = false;
-      exportBtn.innerHTML = '📊 Export Subscriptions';
+      exportBtn.innerHTML = 'Export Subscriptions';
 
-      const resultDiv = document.getElementById('exportResult');
+      var resultDiv = document.getElementById('exportResult');
       
       if (response.success) {
         currentSheetData = response;
         
-        const duplicateInfo = response.duplicates > 0 ? 
-          `<p style="color: #856404; font-size: 13px;">📋 ${response.duplicates} duplicate(s) skipped</p>` : '';
+        var duplicateInfo = response.duplicates > 0 ?
+          '<p style="color: #856404; font-size: 13px;">' + response.duplicates + ' duplicate(s) skipped</p>' : '';
         
-        resultDiv.innerHTML = `
-          <div class="export-success">
-            <h3>✅ Export Successful!</h3>
-            <p style="color: #155724; margin-bottom: 10px;">Exported ${response.count} subscriptions</p>
-            ${duplicateInfo}
-            <div class="action-buttons">
-              <button class="btn btn-secondary btn-small" onclick="copySheetUrl()">📋 Copy Link</button>
-              <button class="btn btn-small" onclick="window.open(currentSheetData.sheetUrl, '_blank')">📊 Open Sheet</button>
-              <button class="btn btn-secondary btn-small" onclick="showShareMessage()">💬 Get Share Message</button>
-            </div>
-            <div id="shareMessageContainer" style="display: none;">
-              <p style="margin-top: 15px; font-size: 13px; color: #155724; font-weight: 500;">Share this message:</p>
-              <div class="share-message-box" id="shareMessageBox"></div>
-              <button class="btn btn-secondary btn-small" style="margin-top: 10px;" onclick="copyShareMessage()">📋 Copy Message</button>
-            </div>
-            <p class="help-text" style="margin-top: 10px;">Sheet ID: ${response.sheetId}</p>
-          </div>
-        `;
+        resultDiv.innerHTML =
+          '<div class="export-success">' +
+            '<h3>Export Successful!</h3>' +
+            '<p style="color: #155724; margin-bottom: 10px;">Exported ' + response.count + ' subscriptions</p>' +
+            duplicateInfo +
+            '<div class="action-buttons">' +
+              '<button class="btn btn-secondary btn-small" onclick="copySheetUrl()">Copy Link</button>' +
+              '<button class="btn btn-small" onclick="window.open(currentSheetData.sheetUrl, \'_blank\')">Open Sheet</button>' +
+              '<button class="btn btn-secondary btn-small" onclick="showShareMessage()">Get Share Message</button>' +
+            '</div>' +
+            '<div id="shareMessageContainer" style="display: none;">' +
+              '<p style="margin-top: 15px; font-size: 13px; color: #155724; font-weight: 500;">Share this message:</p>' +
+              '<div class="share-message-box" id="shareMessageBox"></div>' +
+              '<button class="btn btn-secondary btn-small" style="margin-top: 10px;" onclick="copyShareMessage()">Copy Message</button>' +
+            '</div>' +
+            '<p class="help-text" style="margin-top: 10px;">Sheet ID: ' + response.sheetId + '</p>' +
+          '</div>';
         resultDiv.style.display = 'block';
       } else {
-        resultDiv.innerHTML = `
-          <div style="background: #f8d7da; border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin-top: 15px;">
-            <h3 style="color: #721c24; font-size: 16px;">❌ Export Failed</h3>
-            <p style="color: #721c24;">${response.error}</p>
-          </div>
-        `;
+        resultDiv.innerHTML =
+          '<div style="background: #f8d7da; border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin-top: 15px;">' +
+            '<h3 style="color: #721c24; font-size: 16px;">Export Failed</h3>' +
+            '<p style="color: #721c24;">' + response.error + '</p>' +
+          '</div>';
         resultDiv.style.display = 'block';
       }
     }
 
     function handleExportFailure(error) {
-      const exportBtn = document.getElementById('exportBtn');
+      var exportBtn = document.getElementById('exportBtn');
       exportBtn.disabled = false;
-      exportBtn.innerHTML = '📊 Export Subscriptions';
+      exportBtn.innerHTML = 'Export Subscriptions';
       alert('Error: ' + error.message);
     }
 
     function copySheetUrl() {
-      const url = currentSheetData.sheetUrl;
-      navigator.clipboard.writeText(url).then(() => {
-        const btn = event.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '✅ Copied!';
-        setTimeout(() => btn.innerHTML = originalText, 2000);
+      var url = currentSheetData.sheetUrl;
+      navigator.clipboard.writeText(url).then(function() {
+        var btn = event.target;
+        var originalText = btn.innerHTML;
+        btn.innerHTML = 'Copied!';
+        setTimeout(function() { btn.innerHTML = originalText; }, 2000);
       });
     }
 
@@ -992,43 +528,43 @@
     }
 
     function copyShareMessage() {
-      const text = document.getElementById('shareMessageBox').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = event.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '✅ Copied!';
-        setTimeout(() => btn.innerHTML = originalText, 2000);
+      var text = document.getElementById('shareMessageBox').textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        var btn = event.target;
+        var originalText = btn.innerHTML;
+        btn.innerHTML = 'Copied!';
+        setTimeout(function() { btn.innerHTML = originalText; }, 2000);
       });
     }
 
     function loadFromSheet() {
-      const sheetId = document.getElementById('sheetId').value.trim();
+      var sheetId = document.getElementById('sheetId').value.trim();
       
       if (!sheetId) {
         addLog('Please enter a Google Sheet ID', 'error');
         return;
       }
 
-      const loadBtn = document.getElementById('loadBtn');
+      var loadBtn = document.getElementById('loadBtn');
       loadBtn.disabled = true;
-      loadBtn.innerHTML = '<span class="spinner">⏳</span> Loading...';
+      loadBtn.innerHTML = '<span class="spinner"></span> Loading...';
 
       google.script.run
         .withSuccessHandler(function(response) {
           if (response.success) {
             channelList = response.channelIds;
-            addLog(`✅ Loaded ${response.count} Channel IDs from sheet`, 'success');
+            addLog('Loaded ' + response.count + ' Channel IDs from sheet', 'success');
             document.getElementById('startBtn').disabled = false;
           } else {
-            addLog(`❌ ${response.error}`, 'error');
+            addLog(response.error, 'error');
           }
           loadBtn.disabled = false;
-          loadBtn.innerHTML = '📥 Load Channel IDs';
+          loadBtn.innerHTML = 'Load Channel IDs';
         })
         .withFailureHandler(function(error) {
-          addLog(`❌ Error: ${error.message}`, 'error');
+          addLog('Error: ' + error.message, 'error');
           loadBtn.disabled = false;
-          loadBtn.innerHTML = '📥 Load Channel IDs';
+          loadBtn.innerHTML = 'Load Channel IDs';
         })
         .fetchFromSheet(sheetId);
     }
@@ -1037,7 +573,7 @@
       if (isProcessing) return;
 
       if (importMode === 'paste') {
-        const input = document.getElementById('channelIds').value;
+        var input = document.getElementById('channelIds').value;
         if (!input.trim()) {
           addLog('Please enter at least one Channel ID', 'error');
           return;
@@ -1045,8 +581,8 @@
         
         channelList = input
           .split(/[\n,]+/)
-          .map(id => id.trim())
-          .filter(id => id.length > 0 && (id.startsWith('UC') || id.startsWith('HC')));
+          .map(function(id) { return id.trim(); })
+          .filter(function(id) { return id.length > 0 && (id.startsWith('UC') || id.startsWith('HC')); });
         
         if (channelList.length === 0) {
           addLog('No valid Channel IDs found. Make sure they start with UC or HC', 'error');
@@ -1059,13 +595,13 @@
 
       isProcessing = true;
       document.getElementById('startBtn').disabled = true;
-      document.getElementById('startBtn').innerHTML = '<span class="spinner">⏳</span> Processing...';
+      document.getElementById('startBtn').innerHTML = '<span class="spinner"></span> Processing...';
       document.getElementById('logContainer').classList.add('active');
       document.getElementById('stats').style.display = 'flex';
       document.getElementById('progressBar').classList.add('active');
       
       clearLog();
-      addLog(`🚀 Starting transfer for ${channelList.length} channels...`, 'info');
+      addLog('Starting transfer for ' + channelList.length + ' channels...', 'info');
       
       processBatch(0, 0, 0);
     }
@@ -1074,13 +610,13 @@
       if (index >= channelList.length) {
         isProcessing = false;
         document.getElementById('startBtn').disabled = false;
-        document.getElementById('startBtn').innerHTML = '🚀 Start Transfer';
-        addLog(`✅ Transfer complete! Success: ${successCount}, Failed: ${errorCount}`, 'info');
+        document.getElementById('startBtn').innerHTML = 'Start Transfer';
+        addLog('Transfer complete! Success: ' + successCount + ', Failed: ' + errorCount, 'info');
         return;
       }
 
-      const channelId = channelList[index];
-      const progress = ((index + 1) / channelList.length) * 100;
+      var channelId = channelList[index];
+      var progress = ((index + 1) / channelList.length) * 100;
       
       document.getElementById('progressFill').style.width = progress + '%';
       document.getElementById('totalCount').textContent = index + 1;
@@ -1090,39 +626,40 @@
           if (response.success) {
             successCount++;
             document.getElementById('successCount').textContent = successCount;
-            addLog(`✅ [${index + 1}/${channelList.length}] ${channelId.substring(0, 15)}... - Subscribed`, 'success');
+            addLog('[' + (index + 1) + '/' + channelList.length + '] ' + channelId.substring(0, 15) + '... - Subscribed', 'success');
           } else {
             errorCount++;
             document.getElementById('errorCount').textContent = errorCount;
             
             if (response.critical) {
-              addLog(`❌ [${index + 1}/${channelList.length}] ${response.error}`, 'error');
-              addLog(`⚠️ Stopping transfer due to quota limit`, 'warning');
+              addLog('[' + (index + 1) + '/' + channelList.length + '] ' + response.error, 'error');
+              addLog('Stopping transfer due to quota limit', 'warning');
               isProcessing = false;
               document.getElementById('startBtn').disabled = false;
-              document.getElementById('startBtn').innerHTML = '🚀 Start Transfer';
+              document.getElementById('startBtn').innerHTML = 'Start Transfer';
               return;
             }
             
-            const logType = response.skippable ? 'warning' : 'error';
-            addLog(`⚠️ [${index + 1}/${channelList.length}] ${channelId.substring(0, 15)}... - ${response.error}`, logType);
+            var logType = response.skippable ? 'warning' : 'error';
+            addLog('[' + (index + 1) + '/' + channelList.length + '] ' + channelId.substring(0, 15) + '... - ' + response.error, logType);
           }
           
-          setTimeout(() => processBatch(index + 1, successCount, errorCount), 300);
+          setTimeout(function() { processBatch(index + 1, successCount, errorCount); }, 300);
         })
         .withFailureHandler(function(error) {
           errorCount++;
           document.getElementById('errorCount').textContent = errorCount;
-          addLog(`❌ [${index + 1}/${channelList.length}] ${channelId} - ${error.message}`, 'error');
-          setTimeout(() => processBatch(index + 1, successCount, errorCount), 300);
+          addLog('[' + (index + 1) + '/' + channelList.length + '] ' + channelId + ' - ' + error.message, 'error');
+          setTimeout(function() { processBatch(index + 1, successCount, errorCount); }, 300);
         })
         .subscribeToChannel(channelId);
     }
 
-    function addLog(message, type = 'info') {
-      const logContent = document.getElementById('logContent');
-      const entry = document.createElement('div');
-      entry.className = `log-entry log-${type}`;
+    function addLog(message, type) {
+      if (!type) type = 'info';
+      var logContent = document.getElementById('logContent');
+      var entry = document.createElement('div');
+      entry.className = 'log-entry log-' + type;
       entry.textContent = message;
       logContent.appendChild(entry);
       logContent.scrollTop = logContent.scrollHeight;
@@ -1135,6 +672,12 @@
       document.getElementById('totalCount').textContent = '0';
       document.getElementById('progressFill').style.width = '0%';
     }
+
+    // Initialize after a delay to ensure GAS iframe is ready
+    setTimeout(function() {
+      loadCurrentUser();
+      loadScriptUrl();
+    }, 500);
   </script>
 </body>
 </html>
